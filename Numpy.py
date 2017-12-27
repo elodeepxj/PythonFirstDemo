@@ -1,7 +1,7 @@
 #!/Python27/python
 # -*- coding:utf_8 -*-;
 
-import numpy as np
+import numpyEX as np
 print np.__version__;
 print "----------------抢镜的分割线再次出现-------------------";
 z = np.zeros(10);
