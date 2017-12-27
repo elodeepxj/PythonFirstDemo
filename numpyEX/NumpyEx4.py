@@ -17,4 +17,4 @@ print np.average(c,weights=v)# 加权平均值
 print np.mean(c)#平均值
 print np.max(c)#最大值
 print np.min(c)#最小值
-
+print np.ptp(c)#最大值和最小值的差值
