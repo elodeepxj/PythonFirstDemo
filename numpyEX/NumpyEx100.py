@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import numpy as np
-import sys
+from matplotlib.pyplot import plot, show
 
 import Utils
 
@@ -88,4 +88,14 @@ for i in range(1, 15):
     atr[i] /= 15
 print atr
 
-# 简单移动平均线
+# 简单移动平均线\
+n = 10
+weights = np.ones(n) / n
+print weights
+sma = np.convolve(weights, close)[n - 1:-n + 1]
+t = np.arange(n - 1, len(close))
+print t
+print sma
+plot(t, close[n - 1:], lw=1.0)
+plot(t, sma, lw=2.0)
+show()
