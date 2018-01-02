@@ -89,13 +89,46 @@ for i in range(1, 15):
 print atr
 
 # 简单移动平均线\
-n = 10
+n = 2  # 控制x轴数量
 weights = np.ones(n) / n
 print weights
-sma = np.convolve(weights, close)[n - 1:-n + 1]
+sma = np.convolve(weights, close)[n - 1:-n + 1]  # 卷积运算
 t = np.arange(n - 1, len(close))
-print t
-print sma
+# print t
+# print sma
+# plot(t, close[n - 1:], lw=1.0)
+# plot(t, sma, lw=2.0)
+# show()
+
+# 指数移动平均线
+n = 2
+weights = np.exp(np.linspace(-1., 0., n))
+weights /= weights.sum()
+print weights
+ema = np.convolve(weights, close)[n - 1:-n + 1]
+t = np.arange(n - 1, len(close))
 plot(t, close[n - 1:], lw=1.0)
-plot(t, sma, lw=2.0)
+plot(truerange, ema, lw=1.0)
 show()
+
+# 绘制布林带
+deviation = []
+for i in range(n - 1, len(close)):
+    if i + n < len(close):
+        dev = close[i:i + n]
+    else:
+        dev = close[-n:]
+    averages1 = np.zeros(n)
+    averages.fill(sma[i - n - 1])
+    dev = dev - averages1
+    dev = dev ** 2
+    dev = np.sqrt(np.mean(dev))
+    deviation.append(dev)
+
+deviation = 2 * np.array(deviation)
+upper = sma + deviation
+lower = sma - deviation
+t = np.arange(n - 1, len(close))
+
+# 线性模型
+
