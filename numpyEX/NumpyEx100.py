@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 
 import numpy as np
+import sys
+
 import Utils
 
 # 获取成交价和成交量
@@ -29,7 +31,8 @@ print "波动率:", volatility
 
 # 日期分析
 # 获取日期
-d = np.loadtxt("e:/PythonProjectSpace/data/data.csv", delimiter=',', usecols=(1), converters={1: Utils.datestr2num})
+d, open, high, low, close = np.loadtxt("e:/PythonProjectSpace/data/data.csv", delimiter=',', usecols=(1, 3, 4, 5, 6),
+                                       unpack=True, converters={1: Utils.datestr2num})
 print d
 
 averages = np.zeros(5)  # 创建一个包含5个元素的数组，初始化元素都为0
@@ -45,10 +48,44 @@ print np.max(averages), np.argmax(averages), np.argmin(averages)  # argmax获取
 
 # 汇总数据
 dates = d[:16]
+close = close[:16]
+open = open[:16]
+high = high[:16]
+low = low[:16]
 first_day = np.ravel(np.where(dates == 0))[0]
-print "第一周的星期一:",first_day
+print "第一周的星期一:", first_day
 last_day = np.ravel(np.where(dates == 4))[-1]
-print "第三周的星期五",last_day
-week_indexs = np.arange(first_day,last_day+1)
-week_indexs = np.split(week_indexs,3)
+print "第三周的星期五", last_day
+week_indexs = np.arange(first_day, last_day + 1)
+week_indexs = np.split(week_indexs, 3)
 print week_indexs
+
+
+def summarize(a, o, h, l, c):
+    monday_open = o[a[0]]  # 周开盘价就是周一开盘价
+    week_high = np.max(np.take(h, a))
+    week_low = np.min(np.take(l, a))
+    friday_close = c[a[-1]]  # 周收盘价就是周五收盘价
+    return ("APPLY", monday_open, week_high, week_low, friday_close)
+
+
+weeksummary = np.apply_along_axis(summarize, 1, week_indexs, open, high, low, close)  # 获取周数据
+print weeksummary
+
+# 真实波动幅度均值
+n = 15
+h = high[-n:]
+l = low[-n:]
+print h
+print l
+pre_close = close[-n - 1:-1]
+print pre_close
+truerange = np.maximum(h - l, h - pre_close, pre_close - l)  # 多个数组中的最大值
+atr = np.zeros(15)
+atr[0] = np.mean(truerange)
+for i in range(1, 15):
+    atr[i] = (15 - 1) * atr[i - 1] + truerange[i]
+    atr[i] /= 15
+print atr
+
+# 简单移动平均线
