@@ -109,7 +109,7 @@ ema = np.convolve(weights, close)[n - 1:-n + 1]
 t = np.arange(n - 1, len(close))
 plot(t, close[n - 1:], lw=1.0)
 plot(truerange, ema, lw=1.0)
-show()
+# show()
 
 # 绘制布林带
 deviation = []
@@ -131,4 +131,24 @@ lower = sma - deviation
 t = np.arange(n - 1, len(close))
 
 # 线性模型
+print "线性模型"
+# 获取一个包含n个股价的向量b
+n = 5
+b = close[-n:]
+b = b[::-1]
+print b
+# 初始化一个n*n的二维数组a，元素全部为0
+a = np.zeros((n, n), float)
+print a
+# 用b向量中的n个股价填充数组a
+for i in range(n):
+    a[i:] = close[-n - 1 - i:-1 - i]
+print a
+# 确定线性模型中的系数，解决最小平方和的问题，使用linalg包中的lstsq函数来完成
+x, residuals, rank, s = np.linalg.lstsq(a, b)
+print "系数向量x，残差数组residuals，a的秩，a的奇异值", x, residuals, rank, s
+# 获得系数可以预测下一次的股价，用numpy的dot函数计算
+print np.dot(b, x)
+
+# 绘制趋势线
 
