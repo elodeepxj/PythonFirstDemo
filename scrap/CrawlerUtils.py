@@ -4,17 +4,20 @@ import re
 import itertools
 import urlparse
 
+
 # 网站地图爬虫
-def crawl_sitemap(url):
-    sitemap = DownloadUtils.download(url)
+def crawl_sitemap(url, proxy=True):
+    print "1",proxy
+    sitemap = DownloadUtils.download(url, proxy=proxy)
     links = re.findall("<a href=\"(.*?)\">", sitemap)
     print links
     for link in links:
-        html = DownloadUtils.download("http://example.webscraping.com" + link)
+        print "2",proxy
+        html = DownloadUtils.download("http://example.webscraping.com" + link,proxy=proxy)
 
 
 # id遍历爬虫
-def id_crawler(url):
+def id_crawler():
     max_error = 5
     num_error = 0
     for page in itertools.count(1):
@@ -28,12 +31,12 @@ def id_crawler(url):
         else:
             num_error = 0
 
+
 # 链接爬虫
-def link_crawler(seed_url, link_regex,max_depth=2):
+def link_crawler(seed_url, link_regex, max_depth=2):
     max_depth = 2
     seen = {}
     depth = seen[seed_url]
-
 
     crawl_queue = [seed_url]
     seen = set(crawl_queue)

@@ -3,6 +3,7 @@
 import builtwith
 import whois
 import DownloadUtils
+import CrawlerUtils
 
 from scrap.Throttle import Throttle
 
@@ -13,7 +14,7 @@ whois.whois('http://www.runoob.com/cplusplus/cpp-pointers.html')  # 寻找网站
 url = "http://example.webscraping.com/sitemap.xml"
 seed_url = "http://example.webscraping.com"
 
-# crawl_sitemap(url)
+CrawlerUtils.crawl_sitemap(url, False)
 
 # id_crawler(url)
 
