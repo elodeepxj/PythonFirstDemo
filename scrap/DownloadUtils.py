@@ -8,7 +8,7 @@ import urlparse
 from Config import *
 
 
-def download(url, user_agent='wswp',values=None, proxy=True, num_retries=2):
+def download(url, user_agent='wswp', values=None, proxy=True, num_retries=2):
     """
     :param url:下载地址
     :param user_agent:用户代理
@@ -21,19 +21,21 @@ def download(url, user_agent='wswp',values=None, proxy=True, num_retries=2):
     headers = {'User-agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
     if values is not None:
         data = urllib.urlencode(values)
-        request = urllib2.Request(url,data, headers=headers)
+        request = urllib2.Request(url, data, headers=headers)
     else:
-        request = urllib2.Request(url,headers=headers)
-    httpHandler = urllib2.HTTPHandler(debuglevel=1)
-    httpsHandler = urllib2.HTTPSHandler(debuglevel=1)
-    opener = urllib2.build_opener(httpHandler,httpsHandler)
-    # opener = setProxy(opener,proxy)
-    print "3",proxy
+        request = urllib2.Request(url, headers=headers)
+    if Debug_Log:
+        httpHandler = urllib2.HTTPHandler(debuglevel=1)
+        httpsHandler = urllib2.HTTPSHandler(debuglevel=1)
+        opener = urllib2.build_opener(httpHandler, httpsHandler)
+    else:
+        opener = urllib2.build_opener()
+    # opener = setProxy(opener,proxy)#设置代理
     if proxy:
         proxy_params = {urlparse.urlparse(url).scheme: proxy}
         opener.add_handler(urllib2.ProxyHandler(proxy_params))
     try:
-        html = opener.open(request,timeout=TIMEOUT).read()
+        html = opener.open(request, timeout=TIMEOUT).read()
         # html = urllib2.urlopen(request).read()
     except urllib2.URLError as e:
         print 'URLError:', e.reason
@@ -44,15 +46,16 @@ def download(url, user_agent='wswp',values=None, proxy=True, num_retries=2):
     return html
 
 
-def setProxy(opener,proxy):
+def setProxy(opener, proxy):
     enable_proxy = proxy
-    proxy_header = urllib2.ProxyHandler({"http" : 'http://some-proxy.com:8080'})
+    proxy_header = urllib2.ProxyHandler({"http": 'http://some-proxy.com:8080'})
     null_proxy_handler = urllib2.ProxyHandler({})
     if enable_proxy:
         opener.add_handler(proxy_header)
     else:
         opener.add_handler(null_proxy_handler)
     return opener
+
 
 """
 header 属性:

@@ -7,12 +7,10 @@ import urlparse
 
 # 网站地图爬虫
 def crawl_sitemap(url, proxy=True):
-    print "1",proxy
     sitemap = DownloadUtils.download(url, proxy=proxy)
     links = re.findall("<a href=\"(.*?)\">", sitemap)
     print links
     for link in links:
-        print "2",proxy
         html = DownloadUtils.download("http://example.webscraping.com" + link,proxy=proxy)
 
 
