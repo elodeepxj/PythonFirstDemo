@@ -6,36 +6,44 @@ import urllib
 import urllib2
 import urlparse
 from Config import *
+import cookielib
 
-
-def download(url, user_agent='wswp', values=None, proxy=True, num_retries=2):
+def download(url, user_agent='wswp', values=None, proxy=True,save_cookie=False, num_retries=2):
     """
     :param url:下载地址
     :param user_agent:用户代理
     :param values:参数，用于post和get
     :param proxy:代理是否开启，默认开启
+    :param save_cookie:是否保存cookie，默认关闭
     :param num_retries: 重新下载次数,默认2次
     :return:
     """
     print "download:", url
     headers = {'User-agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
+    if save_cookie:
+        cookie = cookielib.MozillaCookieJar(COOKIE_TXT)
     if values is not None:
         data = urllib.urlencode(values)
         request = urllib2.Request(url, data, headers=headers)
     else:
         request = urllib2.Request(url, headers=headers)
-    if Debug_Log:
+    if Debug_Log:  # 打印debug日志
         httpHandler = urllib2.HTTPHandler(debuglevel=1)
         httpsHandler = urllib2.HTTPSHandler(debuglevel=1)
         opener = urllib2.build_opener(httpHandler, httpsHandler)
-    else:
-        opener = urllib2.build_opener()
+    else:  # 不打印debug日志
+        if save_cookie:
+            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
+        else:
+            opener = urllib2.build_opener()
     # opener = setProxy(opener,proxy)#设置代理
     if proxy:
         proxy_params = {urlparse.urlparse(url).scheme: proxy}
         opener.add_handler(urllib2.ProxyHandler(proxy_params))
     try:
         html = opener.open(request, timeout=TIMEOUT).read()
+        if save_cookie:
+            cookie.save(ignore_discard=True,ignore_expires=True)
         # html = urllib2.urlopen(request).read()
     except urllib2.URLError as e:
         print 'URLError:', e.reason

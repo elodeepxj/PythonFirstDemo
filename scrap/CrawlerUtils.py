@@ -11,7 +11,7 @@ def crawl_sitemap(url, proxy=True):
     links = re.findall("<a href=\"(.*?)\">", sitemap)
     print links
     for link in links:
-        html = DownloadUtils.download("http://example.webscraping.com" + link,proxy=proxy)
+        html = DownloadUtils.download("http://example.webscraping.com" + link, proxy=proxy)
 
 
 # id遍历爬虫
