@@ -8,5 +8,14 @@ BASE_URL = 'http://caipiao.gooooal.com/shtc!result.action?lid=sf14'
 DETAILS_URL = 'http://caipiao.gooooal.com/shtc!detail.action?lid=sf14&ln='
 # URL = 'http://www.shlottery.gov.cn/shsportsweb/html/tycp/kjxh_14csf/List/index.htm'
 
+HOST = 'localhost'
+PORT = 3306
+USER = 'root'
+PASSWORD = 'xiuji850906'
+DB_NAME = 'football'
+CHARSET = 'utf8'
+
+TABLE_NAME = 'china_caipiao'
+
 
 
